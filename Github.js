@@ -1,32 +1,32 @@
-class Http_Client {
+class Github {
     constructor() {
-        this.client_id = '';
-        this.client_secret_id = '';
+        this.client_id = '93518e4cb3c1b44e4369';
+        this.client_secret_id = 'b5e2fd5f6e643ac61405310f88771921719eef11';
         this.per_page = 5;
         this.sort = 'created : asc';
     }
 
-    async get(user) {
-        const profileResponse = await fetch(`https://api.github.com/users/${user}?client_id=${this.client_id}&client_secret=${this.client_secret_id}`, {
+    async getUser(username) {
+        const profileResponse = await fetch(`https://api.github.com/users/${username}?client_id=${this.client_id}&client_secret=${this.client_secret_id}`, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json'
             }
         });
-        const profiledata = await profileResponse.json();
+        const repoResponse = await fetch(`https://api.github.com/users/${username}/repos?per_page=${this.per_page}&sort=${this.sort}&client_id=${this.client_id}&client_secret=${this.client_secret_id}`, {
+            method: 'GET',
+            headers: {
+                'Content-type': 'application/json'
+            }
+        });
 
-        const repoResponse = await fetch(`https://api.github.com/users/${user}/repos?per_page=${this.per_page}&sort=${this.sort}&client_id=${this.client_id}&client_secret=${this.client_secret_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
-        const repodata = await repoResponse.json();
-        console.log(repodata);
+        const profile = await profileResponse.json();
+        const repo = await repoResponse.json();
 
         return {
-            profiledata,
-            repodata
-        };
+            profile,
+            repo
+        }
     }
 }
+
